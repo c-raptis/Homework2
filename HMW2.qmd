@@ -1,0 +1,154 @@
+---
+title: "Base R code"
+format: html
+editor: visual
+---
+
+## Task 1: Basic Vector practice
+
+**1 & 2** - I created the two vectors, pre_measurements and post_measurements and then I assign names to the vector elements
+
+```{r}
+pre_measurements <- c(120, 151, 125, 126, 115, 132, 132, 129, 134, 139, 127, 122, 127, 135, 133, 128, 147, 138, 140, 132)
+
+post_measurements<- c(127, 145, 135, 122, 115, 122, 123, 126, 126, 129, 132, 146, 120, 114, 121, 120, 128, 120, 133, 115)
+
+names(pre_measurements) <- paste("Subject", 1:20, sep = "_")
+names(post_measurements) <- paste("Subject", 1:20, sep = "_")
+```
+
+**3** - Here I use the R math element-wise to calculate the blood pressure for each patient
+
+```{r}
+
+change_blood_pressure <- pre_measurements - post_measurements
+
+```
+
+**4** - I am using the mean() to calculate the average decrease in blood pressure across all patients
+
+```{r}
+
+avg_decrease_blood_pressure <- mean(change_blood_pressure)
+
+```
+
+**5** - Using the "which" it will identify which patients experienced a decrease in blood pressure after the treatment and it's a positive change (\>0)
+
+```{r}
+
+patients_decreased <- which(change_blood_pressure > 0)
+
+```
+
+**6** - Indexing so I can filter for positive change
+
+```{r}
+
+positive_change <- change_blood_pressure[change_blood_pressure > 0]
+
+```
+
+**7** - I use the mean to calculate the average of positive change
+
+```{r}
+
+avg_positive_change <- mean(positive_change)
+
+```
+
+## Task 2: Basic Data Frame practice
+
+
+**1** - Created the dataframe with the four columns (patient, pre_bp, post_bp, diff_bp) 
+
+```{r}
+
+pre_measurements <- c(120, 151, 125, 126, 115, 132, 132, 129, 134, 139, 127, 122, 127, 135, 133, 128, 147, 138, 140, 132)
+post_measurements <- c(127, 145, 135, 122, 115, 122, 123, 126, 126, 129, 132, 146, 120, 114, 121, 120, 128, 120, 133, 115)
+change_blood_pressure <- pre_measurements - post_measurements
+
+bp_data <- data.frame(
+  patient = paste("Subject", 1:20, sep = "_"),
+  pre_bp = pre_measurements,
+  post_bp = post_measurements,
+  diff_bp = change_blood_pressure
+)
+
+```
+
+**2** - Filter the rows where the diff_bp column is negative (<0)
+
+```{r}
+
+negative_diff_bp <- bp_data[bp_data$diff_bp < 0, ]
+
+```
+
+**3** - Added the new column with (True if post_bp < 120) and False if its not
+
+```{r}
+
+bp_data$lower_than_120 <- bp_data$post_bp < 120
+
+```
+
+**4** - Here I just print the data frame
+
+```{r}
+
+knitr::kable(bp_data)
+
+```
+
+## Task 3: List practice
+
+**1** - New information about the treatment that is a placebo, I put those in a new data frame with the additional column and now is 10 subjects rather than 20
+
+```{r}
+
+pre_placebo <- c(138, 135, 147, 117, 152, 134, 114, 121, 131, 130)
+post_placebo <- c(105, 136, 123, 130, 134, 143, 135, 139, 120, 124)
+change_placebo <- pre_placebo - post_placebo
+
+
+placebo_data <- data.frame(
+  patient = paste("Subject", 1:10, sep = "_"),
+  pre_bp = pre_placebo,
+  post_bp = post_placebo,
+  diff_bp = change_placebo,
+  lower_than_120 = post_placebo < 120
+)
+
+```
+
+**2** - The first element of the list is from task 2 and the second element with the new data from task 3
+
+```{r}
+
+blood_pressure_list <- list(
+  treatment = bp_data,
+  placebo = placebo_data
+)
+
+```
+
+**3** - I access the first list element with $ that accesses the name directly, double brackets [[ ]] to access by index and single bracket [ ] to access by name
+
+```{r}
+
+treatment_1 <- blood_pressure_list$treatment
+
+treatment_2 <- blood_pressure_list[[1]]
+
+treatment_3 <- blood_pressure_list["treatment"]
+
+```
+
+**4** - Just accessing pre_bp of the placebo data frame from the previous list 
+
+```{r}
+
+pre_bp_placebo <- blood_pressure_list$placebo$pre_bp
+
+```
